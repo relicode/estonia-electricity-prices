@@ -15,7 +15,7 @@ export default async function loadData() {
   url.searchParams.append('deliveryArea', 'EE')
   url.searchParams.append('currency', 'EUR')
 
-  const response = await fetch(url, { cache: 'no-store' })
+  const response = await fetch(url)
   const data = await response.json()
 
   /**
