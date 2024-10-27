@@ -15,8 +15,7 @@ export default async function loadData() {
   url.searchParams.append('deliveryArea', 'EE')
   url.searchParams.append('currency', 'EUR')
 
-  const updateInterval = 60 * 15
-  const response = await fetch(url, { next: { revalidate: updateInterval } })
+  const response = await fetch(url, { cache: 'no-store' })
   const data = await response.json()
 
   /**
@@ -39,7 +38,7 @@ export default async function loadData() {
 
   const parsed = {
     // ...data,
-    createdAt: parseDate(Date.now(), true),
+    date,
     updatedAt: parseDate(data.updatedAt, true),
     prices: data.multiAreaEntries.map(({ deliveryStart, deliveryEnd, entryPerArea: { EE } }) => ({
       from: parseDate(deliveryStart),
