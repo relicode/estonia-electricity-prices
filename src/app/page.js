@@ -9,7 +9,7 @@ const renderBg = (price) => {
 
 const PricesTable = ({ date, hourly }) => (
   <table className="border-separate border-spacing-2 border border-slate-400 p-2 w-full sm:w-1/2">
-    <caption className="text-xl">{date}</caption>
+    <caption className="text-xl p-2">{date}</caption>
     <thead>
       <tr>
         <th className="border border-slate-300 p-2">From</th>
