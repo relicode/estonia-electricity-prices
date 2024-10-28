@@ -1,12 +1,13 @@
 import { PHASE_DEVELOPMENT_SERVER } from 'next/dist/shared/lib/constants.js'
 
-const APP_NAME = 'electricity-prices'
+const distDir = 'electricity-prices'
+const output = 'export'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = (phase, { defaultConfig }) => ({
-  assetPrefix: phase === PHASE_DEVELOPMENT_SERVER ? '' : `https://mccall.kapsi.fi/${APP_NAME}`,
-  distDir: APP_NAME,
-  output: 'export',
+  assetPrefix: phase === PHASE_DEVELOPMENT_SERVER ? '' : `https://mccall.kapsi.fi/${distDir}`,
+  distDir,
+  output,
   images: {
     unoptimized: true,
   },

@@ -7,32 +7,56 @@ const renderBg = (price) => {
   return 'bg-green-100 dark:bg-green-800'
 }
 
+const PricesTable = ({ date, hourly }) => (
+  <table className="border-separate border-spacing-2 border border-slate-400 p-2 w-full sm:w-1/2">
+    <caption className="text-xl">{date}</caption>
+    <thead>
+      <tr>
+        <th className="border border-slate-300 p-2">From</th>
+        <th className="border border-slate-300 p-2">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {hourly.map(({ from, to, price, string }) => (
+        <tr id={`prices-${date}-${from.slice(0, 2)}`} key={string}>
+          <td className={`border border-slate-300 p-2 text-center ${renderBg(price)}`}>
+            {from} - {to}
+          </td>
+          <td className={`border border-slate-300 p-2 text-center  ${renderBg(price)}`}>{price}¢ (kWh)</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+)
+
 export default async function Home() {
-  const { date, updatedAt, prices } = await api()
+  const now = new Date()
+
+  const yesterday = new Date(now)
+  yesterday.setDate(yesterday.getDate() - 1)
+
+  const tomorrow = new Date(now)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+
+  const dailyData = await Promise.allSettled([api(yesterday), api(now), api(tomorrow)])
+
+  const [dataYesterday, dataToday, dataTomorrow] = dailyData.map(({ status, value }) =>
+    status === 'fulfilled' ? value : undefined
+  )
+
+  console.log(dailyData)
+  console.log(dataYesterday, dataToday, dataTomorrow)
+
+  const updatedAt = [dataYesterday, dataToday, dataTomorrow].reduce((acc, cur) => cur.updatedAt || acc)
+  if (!updatedAt) throw new Error("Couldn't fetch data")
 
   return (
     <div className="font-[family-name:var(--font-geist-sans)] p-4">
-      <main className="flex flex-col gap-2 row-start-2 items-center">
-        <h1 className="text-2xl text-center">Electricity prices {date}</h1>
-        <table className="border-separate border-spacing-2 border border-slate-400 p-2 w-full sm:w-1/2">
-          <caption>Updated {updatedAt}</caption>
-          <thead>
-            <tr>
-              <th className="border border-slate-300 p-2">From</th>
-              <th className="border border-slate-300 p-2">Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {prices.map(({ from, to, price, string }) => (
-              <tr id={`prices-${from.slice(0, 2)}`} key={string}>
-                <td className={`border border-slate-300 p-2 text-center ${renderBg(price)}`}>
-                  {from} - {to}
-                </td>
-                <td className={`border border-slate-300 p-2 text-center  ${renderBg(price)}`}>{price}¢ (kWh)</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <main className="flex flex-col gap-8 row-start-2 items-center">
+        <h1 className="text-2xl text-center">Electricity prices {updatedAt}</h1>
+        {dataYesterday && <PricesTable {...dataYesterday} />}
+        {dataToday && <PricesTable {...dataToday} />}
+        {dataTomorrow && <PricesTable {...dataTomorrow} />}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
       <ScrollIntoView />
