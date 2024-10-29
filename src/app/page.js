@@ -1,5 +1,6 @@
 import api from '../services/api'
 import ScrollIntoView from './ScrollIntoView'
+import { parseIdAttr } from '../utils'
 
 const renderBg = (price) => {
   if (price >= 20) return 'bg-red-100 dark:bg-red-800'
@@ -18,7 +19,7 @@ const PricesTable = ({ date, hourly }) => (
     </thead>
     <tbody>
       {hourly.map(({ from, to, price, string }) => (
-        <tr id={`prices-${date}-${from.slice(0, 2)}`} key={string}>
+        <tr id={parseIdAttr(date, from)} key={string}>
           <td className={`border border-slate-300 p-2 text-center ${renderBg(price)}`}>
             {from} - {to}
           </td>
@@ -44,19 +45,16 @@ export default async function Home() {
     status === 'fulfilled' ? value : undefined
   )
 
-  console.log(dailyData)
-  console.log(dataYesterday, dataToday, dataTomorrow)
-
-  const updatedAt = [dataYesterday, dataToday, dataTomorrow].reduce((acc, cur) => cur.updatedAt || acc)
+  const updatedAt = [dataYesterday, dataToday, dataTomorrow].reduce((acc, cur) => cur?.updatedAt || acc)
   if (!updatedAt) throw new Error("Couldn't fetch data")
 
   return (
     <div className="font-[family-name:var(--font-geist-sans)] p-4">
       <main className="flex flex-col gap-8 row-start-2 items-center">
-        <h1 className="text-2xl text-center">Electricity prices {updatedAt}</h1>
+        <h1 className="text-2xl text-center">Updated {updatedAt}</h1>
+        {dataYesterday && <PricesTable {...dataYesterday} />}
         {dataToday && <PricesTable {...dataToday} />}
         {dataTomorrow && <PricesTable {...dataTomorrow} />}
-        {!dataTomorrow && dataYesterday && <PricesTable {...dataYesterday} />}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
       <ScrollIntoView />
