@@ -5,6 +5,6 @@ import { parseIdAttr } from '../utils.js'
 
 export default function ScrollIntoView() {
   useEffect(() => {
-    document.getElementById(parseIdAttr())?.scrollIntoView(true)
+    document.getElementById(parseIdAttr())?.scrollIntoView({ behavior: 'smooth' })
   }, [])
 }
