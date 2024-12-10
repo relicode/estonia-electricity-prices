@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "next dev --turbopack",
+    "lint": "next lint",
+    "start": "while [ true ]; do git pull; npm run build && npm run sync; sleep 5m; done",
+    "sync": "rsync -avuP electricity-prices kapsi.fi:public_html"
   },
   "dependencies": {
     "next": "15.0.1",
