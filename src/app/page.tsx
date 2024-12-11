@@ -2,8 +2,9 @@ import api, { ApiData, dateStr } from '../services/api-nordpoolgroup'
 import ScrollIntoView from './ScrollIntoView'
 
 const renderBg = (price: number) => {
-  if (price > 21) return 'bg-red-100 dark:bg-red-600 dark:text-black dark:border-slate-800'
-  if (price > 14) return 'bg-red-100 dark:bg-red-600 dark:text-black dark:border-slate-800'
+  if (price > 28) return 'bg-red-700 dark:bg-red-700 text-white dark:border-slate-800'
+  if (price > 21) return 'bg-red-400 dark:bg-red-400 dark:text-black dark:border-slate-800'
+  if (price > 14) return 'bg-orange-300 dark:bg-orange-600 dark:text-black dark:border-slate-800'
   if (price > 7) return 'bg-yellow-100 dark:bg-yellow-500 dark:text-black dark:border-slate-800'
   return 'bg-green-100 dark:bg-green-600 dark:text-black dark:border-slate-800'
 }
