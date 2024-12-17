@@ -55,7 +55,7 @@ export type ApiData = {
   ]
 }
 
-const gmt2Eet = (dateParams: ConstructorParameters<Date>[0]) => {
+const gmt2Eet = (dateParams: ConstructorParameters<typeof Date>[0]) => {
   const date = new Date(dateParams)
   date.setHours(date.getHours() + 2)
   return date
