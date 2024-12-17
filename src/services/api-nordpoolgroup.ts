@@ -55,6 +55,12 @@ export type ApiData = {
   ]
 }
 
+const gmt2Eet = (dateParams: ConstructorParameters<Date>[0]) => {
+  const date = new Date(dateParams)
+  date.setHours(date.getHours() + 2)
+  return date
+}
+
 export default async function loadData(
   when: 'today' | 'tomorrow' | 'yesterday' = 'today'
 ): Promise<ApiData | undefined> {
@@ -91,10 +97,10 @@ export default async function loadData(
   return {
     ...data,
     date,
-    updatedAt: new Date(updatedAt),
+    updatedAt: gmt2Eet(updatedAt),
     prices: data.multiAreaEntries.map(({ deliveryStart, deliveryEnd, entryPerArea: { EE } }) => ({
-      from: new Date(deliveryStart),
-      to: new Date(deliveryEnd),
+      from: gmt2Eet(deliveryStart),
+      to: gmt2Eet(deliveryEnd),
       price: Math.round(EE / 10),
     })),
   }
